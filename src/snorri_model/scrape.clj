@@ -1,21 +1,11 @@
 (ns snorri-model.scrape
-  (:require [appengine-magic.services.url-fetch :as url-fetch]))
+  (:require [appengine-magic.services.url-fetch :as url-fetch]
+            [clojure.string :as string]))
 
-(def scrape-url "http://moneycentral.msn.com/investor/research/sreport.asp?Symbol=%s&QD=1&AIE=1&FRH=1&FRK=1&Type=Equity")
+(def scrape-base-url "http://moneycentral.msn.com/investor/research/sreport.asp?Symbol=%s&QD=1&AIE=1&FRH=1&FRK=1&Type=Equity")
 
 (defn get-scrape-url [symbol]
-  (format scrape-url symbol))
-
-(defn to-double
-  "Convert the string to a double, returns nil if not a valid number."
-  [s]
-  (try
-    (Double/parseDouble s)
-    (catch NumberFormatException _ nil)))
-
-(defn extract-close [html]
-  (if-let [match (re-matches #"<tr><td>Previous Close</td><td.*?>(.*?)</td></tr>" html)]
-    (to-double (get match 1))))
+  (format scrape-base-url symbol))
 
 (defn filter-span
   "Remove <span> tag from the html."
@@ -24,34 +14,44 @@
     (get match 1)
     html))
 
-(defn filter-outliers
-  "Remove outliers from the list."
-  [lower upper l]
-  (filter #(< lower % upper) l))
+(defn filter-percent
+  "Remove % from the html."
+  [html]
+  (string/replace html #"%" ""))
 
-(defn filter-nils
-  "Remove nil values from the list."
-  [l]
-  (filter #(not (nil? %)) l))
+(defn to-money
+  "Covert the string to a Money representation"
+  [s]
+  (try
+    (bigdec s)
+    (catch NumberFormatException _ nil)))
 
-(defn average
-  "Calculate the average of the given numbers."
-  [l]
-  (if-not (empty? l)
-    (/ (apply + l) (count l))))
+(defn match-to-money
+  "Convert a regex match to money"
+  [m]
+  (map #(to-money (filter-percent (filter-span %))) (rest m)))
 
-(defn round
-  "Round the number to 2 digits"
-  [n]
-  (Double/parseDouble (format "%.2f" n)))
+(defn extract-close
+  "Extract the closing price from the html"
+  [html]
+  (if-let [match (re-matches #"<tr><td>Previous Close</td><td.*?>(.*?)</td></tr>" html)]
+    (first (match-to-money match))))
 
-(def pe-min 7)
-(def pe-max 32)
-
-(defn extract-avg10yPE [html]
+(defn extract-avg10yPE
+  "Extract the Avg P/E of the last 10 yearn from the html"
+  [html]
   (if-let [block-match (re-matches #"<table><thead><tr>.*?>Avg P/E</th>.*?<tbody>(.*?)</tbody></table>" html)]
-    (let [pe-lines (re-seq #"<tr><td>.*?</td><td.*?>(.*?)</td>" (get block-match 1))
-          pe-list (map #(to-double (filter-span (get % 1))) pe-lines)]
-      (round (average (filter-outliers pe-min pe-max (filter-nils pe-list)))))))
+    (let [pe-lines (re-seq #"<tr><td>.*?</td><td.*?>(.*?)</td>" (get block-match 1))]
+      (map #(first (match-to-money %)) pe-lines))))
 
+(defn extract-1yES
+  "Extract the actual Earnings Surprise of the last 4 quarters from the html"
+  [html]
+  (if-let [match (re-matches #"<tr><td>Actual</td><td.*?>.*?</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td></tr>" html)]
+    (match-to-money match)))
 
+(defn extract-5yEG
+  "Extract the company Earnings Growth rate for the next 5 years from the html"
+  [html]
+  (if-let [match (re-matches #"<tr><td>Company</td><td.*?>.*?</td><td.*?>.*?</td><td.*?>.*?</td><td.*?>(.*?)</td><td.*?>.*?</td></tr>" html)]
+    (first (match-to-money match))))
