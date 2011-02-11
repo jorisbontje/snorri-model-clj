@@ -1,0 +1,23 @@
+# snorri-model
+
+FIXME: write description
+
+## Run interactive
+$ lein repl
+(require '[appengine-magic.core :as ae])
+(use '[snorri-model.core])
+(ae/serve snorri-model-app)
+
+## Run devserver
+$ lein appengine-prepare
+$ dev_appserver.sh war/
+
+## Push to production
+$ lein appengine-prepare
+$ appcfg.sh update war/
+
+## License
+
+Copyright (C) 2010 FIXME
+
+Distributed under the Eclipse Public License, the same as Clojure.
