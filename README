@@ -5,7 +5,7 @@ FIXME: write description
 ## Run interactive
 $ lein repl
 (require '[appengine-magic.core :as ae])
-(use '[snorri-model.core])
+(use '[snorri-model.core] :reload-all)
 (ae/serve snorri-model-app)
 
 ## Run devserver
