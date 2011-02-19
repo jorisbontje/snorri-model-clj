@@ -1,6 +1,6 @@
 # snorri-model
 
-FIXME: write description
+Track stocks, perform analysis and give trading advise using snorri-model by Henrik Oude Nijhuis.
 
 ## Run interactive
 $ lein repl
@@ -18,6 +18,6 @@ $ appcfg.sh update war/
 
 ## License
 
-Copyright (C) 2010 FIXME
+Copyright (C) 2011 Joris Bontje
 
 Distributed under the Eclipse Public License, the same as Clojure.
