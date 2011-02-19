@@ -34,3 +34,21 @@
 
 (defn calc-exp [pe es eg]
   (round (* es pe (Math/pow (inc (/ eg 100)) 5))))
+
+(defn calc-gain [last exp]
+  (if (pos? last)
+    (round (* 100 (dec (Math/pow (/ exp last) 0.2))))
+    0.0))
+
+(defn give-advise [gain]
+  (cond
+    (>= gain 20) "BUY"
+    (<= gain 8) "SELL"
+    :else "HOLD"))
+
+(defn enrich-data [{:keys [last pe es eg] :as data}]
+  (let [secure-eg (calc-secure-EG eg)
+        exp (calc-exp pe es secure-eg)
+        gain (calc-gain last exp)
+        advise (give-advise gain)]
+    (assoc data :exp exp :gain gain :advise advise)))
