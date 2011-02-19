@@ -12,19 +12,19 @@
 (defn fetch-success? [response]
   (= 200 (:response-code response)))
 
-(defn log-fetch-failure [symbol response]
-  (println "Error fetching symbol" symbol response))
+(defn log-fetch-failure [symbol]
+  (println "Error fetching symbol" symbol))
 
-(defn log-parse-failure [symbol html]
-  (println "Error parsing html" symbol html))
+(defn log-parse-failure [symbol]
+  (println "Error parsing html" symbol))
 
-(defn extract-data [html]
+(defn extract-data [symbol html]
   (let [close (scrape/extract-close html)
         ten-y-pe (scrape/extract-avg10yPE html)
         es (scrape/extract-1yES html)
         eg (scrape/extract-5yEG html)]
-    (when (and close ten-y-pe es eg)
-        {:close close :pe (process/calc-avg10yPE ten-y-pe) :es es :eg eg})))
+    (if (and close ten-y-pe es eg)
+      ({:close close :pe (process/calc-avg10yPE ten-y-pe) :es es :eg eg}))))
 
 (defn store-data! [symbol data]
   (let [now (util/now)]
@@ -33,12 +33,12 @@
 (defn process-response [symbol response]
   (let [html (String. (:content response))
         data (extract-data symbol html)]
-    (if (data)
+    (if data
       (store-data! symbol data)
-      (log-parse-failure symbol html))))
+      (log-parse-failure symbol))))
 
 (defn harvest [symbol]
   (let [response (fetch-symbol symbol)]
     (if (fetch-success? response)
       (process-response symbol response)
-      (log-fetch-failure symbol response))))
+      (log-fetch-failure symbol))))
