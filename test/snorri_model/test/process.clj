@@ -22,6 +22,10 @@
   (is (= "HOLD" (give-advise 15.0))))
 
 (deftest should-enrich-data
-  (is (= {:symbol "BBBY" :close 15.12 :pe 11.3 :es 12.3 :eg 8.3
-          :safe-eg 7.3 :advise "BUY", :gain 67.22, :exp 197.69}
-         (enrich-data {:symbol "BBBY" :close 15.12 :pe 11.3 :es 12.3 :eg 8.3}))))
+  (is (= {:symbol "BBBY" :close 15.12
+          :pe [14.80 16.90 16.60 18.10 20.70 23.40 30.60 33.90 40.50 35.20]
+          :es [0.86 0.52 0.70 0.74] :eg 8.3
+          :avg-pe 20.2 :sum-es 2.82 :safe-eg 7.3 :advise "BUY" :gain 39.9 :exp 81.02}
+         (enrich-data {:symbol "BBBY" :close 15.12
+                       :pe [14.80 16.90 16.60 18.10 20.70 23.40 30.60 33.90 40.50 35.20]
+                       :es [0.86 0.52 0.70 0.74] :eg 8.3}))))

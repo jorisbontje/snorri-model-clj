@@ -1,6 +1,7 @@
 (ns snorri-model.scrape
   (:require [appengine-magic.services.url-fetch :as url-fetch]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [snorri-model.process :as process]))
 
 (def scrape-base-url "http://moneycentral.msn.com/investor/research/sreport.asp?Symbol=%s&QD=1&AIE=1&FRH=1&FRK=1&Type=Equity")
 
@@ -37,8 +38,8 @@
   (if-let [match (re-find #"<tr><td>Previous Close</td><td.*?>(.*?)</td></tr>" html)]
     (first (match-to-money match))))
 
-(defn extract-avg10yPE
-  "Extract the Avg P/E of the last 10 yearn from the html"
+(defn extract-10yPE
+  "Extract the P/E of the last 10 yearn from the html"
   [html]
   (if-let [block-match (re-find #"<table><thead><tr>.*?>Avg P/E</th>.*?<tbody>(.*?)</tbody></table>" html)]
     (let [pe-lines (re-seq #"<tr><td>.*?</td><td.*?>(.*?)</td>" (get block-match 1))]
@@ -55,3 +56,11 @@
   [html]
   (if-let [match (re-find #"<tr><td>Company</td><td.*?>.*?</td><td.*?>.*?</td><td.*?>.*?</td><td.*?>(.*?)</td><td.*?>.*?</td></tr>" html)]
     (first (match-to-money match))))
+
+(defn extract-data [html]
+  (let [close (extract-close html)
+        pe (extract-10yPE html)
+        es (extract-1yES html)
+        eg (extract-5yEG html)]
+    (if (and close pe es eg)
+      {:close close :pe pe :es es :eg eg})))

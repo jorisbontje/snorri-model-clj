@@ -33,9 +33,9 @@
       [:tr
        [:th "Symbol"] [:th "10yAvgPE"] [:th "1yES"] [:th "5yExpEG"] [:th "Safe5yExpEG"]
        [:th "LAST"] [:th "5yEXP"] [:th "yGAIN"] [:th "ADVISE"]]
-      (for [{:keys [symbol close pe es eg safe-eg exp gain advise]} data]
+      (for [{:keys [symbol close avg-pe sum-es eg safe-eg exp gain advise]} data]
              [:tr
-              [:td (symbol-link symbol)] [:td pe] [:td es] [:td eg] [:td safe-eg]
+              [:td (symbol-link symbol)] [:td avg-pe] [:td sum-es] [:td eg] [:td safe-eg]
               [:td close] [:td exp] [:td gain] [:td advise]])]]))
 
 (defn symbols [data]

@@ -1,10 +1,5 @@
 (ns snorri-model.process)
 
-(defn filter-nils
-  "Remove nil values from the list."
-  [l]
-  (filter #(not (nil? %)) l))
-
 (defn filter-outliers
   "Remove outliers from the list."
   [lower upper l]
@@ -25,8 +20,11 @@
 (def pe-min 7)
 (def pe-max 32)
 
-(defn calc-avg10yPE [l]
+(defn calc-avg-pe [l]
   (round (average (filter-outliers pe-min pe-max l))))
+
+(defn calc-sum-es [l]
+  (round (apply + l)))
 
 (defn calc-safe-eg [eg]
   (round (if (< eg 10)
@@ -48,8 +46,10 @@
     :else "HOLD"))
 
 (defn enrich-data [{:keys [close pe es eg] :as data}]
-  (let [safe-eg (calc-safe-eg eg)
-        exp (calc-exp pe es safe-eg)
+  (let [avg-pe (calc-avg-pe pe)
+        sum-es (calc-sum-es es)
+        safe-eg (calc-safe-eg eg)
+        exp (calc-exp avg-pe sum-es safe-eg)
         gain (calc-gain close exp)
         advise (give-advise gain)]
-    (assoc data :safe-eg safe-eg :exp exp :gain gain :advise advise)))
+    (assoc data :avg-pe avg-pe :sum-es sum-es :safe-eg safe-eg :exp exp :gain gain :advise advise)))
