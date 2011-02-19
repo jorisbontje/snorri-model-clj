@@ -27,17 +27,17 @@
 (defn calc-avg10yPE [l]
   (round (average (filter-outliers pe-min pe-max l))))
 
-(defn calc-secure-EG [eg]
-  (if (< eg 10)
+(defn calc-safe-eg [eg]
+  (round (if (< eg 10)
     (dec eg)
-    (- eg (quot eg 4))))
+    (- eg (quot eg 4)))))
 
 (defn calc-exp [pe es eg]
   (round (* es pe (Math/pow (inc (/ eg 100)) 5))))
 
-(defn calc-gain [last exp]
-  (if (pos? last)
-    (round (* 100 (dec (Math/pow (/ exp last) 0.2))))
+(defn calc-gain [close exp]
+  (if (pos? close)
+    (round (* 100 (dec (Math/pow (/ exp close) 0.2))))
     0.0))
 
 (defn give-advise [gain]
@@ -46,9 +46,9 @@
     (<= gain 8) "SELL"
     :else "HOLD"))
 
-(defn enrich-data [{:keys [last pe es eg] :as data}]
-  (let [secure-eg (calc-secure-EG eg)
-        exp (calc-exp pe es secure-eg)
-        gain (calc-gain last exp)
+(defn enrich-data [{:keys [close pe es eg] :as data}]
+  (let [safe-eg (calc-safe-eg eg)
+        exp (calc-exp pe es safe-eg)
+        gain (calc-gain close exp)
         advise (give-advise gain)]
-    (assoc data :exp exp :gain gain :advise advise)))
+    (assoc data :safe-eg safe-eg :exp exp :gain gain :advise advise)))

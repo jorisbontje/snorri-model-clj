@@ -31,12 +31,12 @@
     [:div#data
      [:table {:border 1}
       [:tr
-       [:th "Symbol"] [:th "10yAvgPE"] [:th "1yES"] [:th "Safe5yExpEG"]
+       [:th "Symbol"] [:th "10yAvgPE"] [:th "1yES"] [:th "EG"] [:th "Safe5yExpEG"]
        [:th "LAST"] [:th "5yEXP"] [:th "yGAIN"] [:th "ADVISE"]]
-      (for [{:keys [symbol close pe es eg]} data]
+      (for [{:keys [symbol close pe es eg safe-eg exp gain advise]} data]
              [:tr
-              [:td (symbol-link symbol)] [:td pe] [:td es] [:td eg]
-              [:td close] [:td "EXP"] [:td "GAIN"] [:td "HOLD"]])]]))
+              [:td (symbol-link symbol)] [:td pe] [:td es] [:td eg] [:td safe-eg]
+              [:td close] [:td exp] [:td gain] [:td advise]])]]))
 
 (defn symbols [data]
   (html
