@@ -14,7 +14,8 @@
   "Calculate the average of the given numbers."
   [l]
   (if-not (empty? l)
-    (/ (apply + l) (count l))))
+    (let [sum (apply + l)]
+      (.divide (bigdec sum) (bigdec (count l)) java.math.BigDecimal/ROUND_HALF_UP))))
 
 (defn round
   "Round the number to 2 digits"

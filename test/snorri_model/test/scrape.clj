@@ -9,8 +9,14 @@
 (def html-close
   "<tr><td>Previous Close</td><td style=\"text-align:right\">164.09</td></tr>")
 
+(def html-close-newlines
+  "\n<tr><td>Previous Close</td><td style=\"text-align:right\">164.09</td></tr>\n")
+
 (deftest should-extract-close
   (is (= 164.09 (extract-close html-close))))
+
+(deftest should-extract-close-with-newlines
+  (is (= 164.09 (extract-close html-close-newlines))))
 
 (deftest should-return-nil-extract-close
   (is (= nil (extract-close "xyzzy"))))

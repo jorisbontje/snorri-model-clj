@@ -24,7 +24,7 @@
         es (scrape/extract-1yES html)
         eg (scrape/extract-5yEG html)]
     (if (and close ten-y-pe es eg)
-      ({:close close :pe (process/calc-avg10yPE ten-y-pe) :es es :eg eg}))))
+      {:close close :pe (process/calc-avg10yPE ten-y-pe) :es es :eg eg})))
 
 (defn store-data! [symbol data]
   (let [now (util/now)]
