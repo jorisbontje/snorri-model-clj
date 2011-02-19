@@ -26,3 +26,11 @@
 
 (defn calc-avg10yPE [l]
   (round (average (filter-outliers pe-min pe-max l))))
+
+(defn calc-secure-EG [eg]
+  (if (< eg 10)
+    (dec eg)
+    (- eg (quot eg 4))))
+
+(defn calc-exp [pe es eg]
+  (round (* es pe (Math/pow (inc (/ eg 100)) 5))))
