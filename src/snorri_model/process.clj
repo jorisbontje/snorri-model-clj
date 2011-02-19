@@ -1,4 +1,4 @@
-(ns snorri-model.preprocess)
+(ns snorri-model.process)
 
 (defn filter-nils
   "Remove nil values from the list."
