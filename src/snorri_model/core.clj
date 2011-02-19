@@ -7,6 +7,7 @@
             [snorri-model.view :as view])
   (:use compojure.core
         ring.middleware.reload
+        ring.middleware.params
         ring.util.response))
 
 (defroutes snorri-model-app-handler
@@ -24,13 +25,13 @@
     (if (not (and (user/user-logged-in?) (user/user-admin?)))
       (redirect "/")
       (do
-        (store/create-symbol symbol)
+        (store/create-symbol! symbol)
         (redirect "/symbols/"))))
   (POST "/symbols/:symbol" [symbol]
     (if (not (and (user/user-logged-in?) (user/user-admin?)))
       (redirect "/")
       (do
-        (store/delete-symbol symbol)
+        (store/delete-symbol! symbol)
         (redirect "/symbols/"))))
   (ANY "/*" _
     {:status 404
@@ -42,6 +43,7 @@
 
 (def app
   (-> #'snorri-model-app-handler
+    (wrap-params)
     (mw/wrap-if interactive? wrap-reload '[snorri-model.core snorri-model.process
                                            snorri-model.store snorri-model.view])))
 

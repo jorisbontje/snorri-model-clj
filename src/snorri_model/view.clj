@@ -31,7 +31,7 @@
     [:div#data
      [:table {:border 1}
       [:tr
-       [:th "Symbol"] [:th "10yAvgPE"] [:th "1yES"] [:th "EG"] [:th "Safe5yExpEG"]
+       [:th "Symbol"] [:th "10yAvgPE"] [:th "1yES"] [:th "5yExpEG"] [:th "Safe5yExpEG"]
        [:th "LAST"] [:th "5yEXP"] [:th "yGAIN"] [:th "ADVISE"]]
       (for [{:keys [symbol close pe es eg safe-eg exp gain advise]} data]
              [:tr

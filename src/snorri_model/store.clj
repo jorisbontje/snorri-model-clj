@@ -9,11 +9,11 @@
   (ds/query :kind Symbol
             :sort [:symbol]))
 
-(defn create-symbol [symbol]
+(defn create-symbol! [symbol]
   (ds/save! (Symbol. (string/trim
                        (string/upper-case symbol)))))
 
-(defn delete-symbol [symbol]
+(defn delete-symbol! [symbol]
   (ds/delete! (ds/query :kind Symbol :filter (= :symbol symbol))))
 
 (defn get-data []
@@ -22,5 +22,5 @@
 (defn get-last-date []
   (:date (first (ds/query :kind Data :sort [[:date :desc]]))))
 
-(defn add-data [symbol date close pe es eg]
+(defn add-data! [{:keys [symbol date close pe es eg]}]
   (ds/save! (Data. (str date "_" symbol) symbol date close pe es eg)))
