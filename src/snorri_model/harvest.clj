@@ -12,10 +12,12 @@
   (= 200 (:response-code response)))
 
 (defn log-fetch-failure [symbol]
-  (println "Error fetching symbol" symbol))
+  (binding [*out* *err*]
+    (println "Error fetching symbol" symbol)))
 
 (defn log-parse-failure [symbol]
-  (println "Error parsing html" symbol))
+  (binding [*out* *err*]
+    (println "Error parsing html" symbol)))
 
 (defn store-data! [symbol data]
   (let [today (util/today)]

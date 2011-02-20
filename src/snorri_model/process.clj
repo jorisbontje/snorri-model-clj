@@ -60,9 +60,9 @@
 
 (defn calc-gain [close exp]
   (check-numbers [close exp]
-    (if (pos? close)
+    (if (every? pos? [close exp])
       (round (* 100 (dec (Math/pow (/ exp close) 0.2))))
-      0.0)))
+      "NA")))
 
 (defn give-advise [gain]
   (check-numbers [gain]

@@ -11,14 +11,14 @@
 
 (defn daily-update []
   (let [today (util/today)]
+    (println "Queueing symbols")
     (doseq [{symbol :symbol} (store/get-symbols)]
       (when-not (store/data-exists? today symbol)
-        (println "Queueing " symbol)
         (tq/add! :url "/tasks/fetch" :queue "fetchqueue" :params {:symbol symbol})))
     (return-200 "OK")))
 
 (defn fetch-symbol [symbol]
-  (do (println "Fetching symbol: " symbol)
+  (do (println "Fetching symbol" symbol)
     (if (store/symbol-exists? symbol)
       (do
         (harvest/harvest symbol)
