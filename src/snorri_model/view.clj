@@ -43,10 +43,19 @@
     [:div#data
      [:table
       [:tr
-       [:th "Symbol"]]
-      (for [{:keys [symbol]} data]
+       [:th "Symbol"]
+       [:th "Last scrape"]
+       [:th "Last result"]
+       [:th "# Success"]
+       [:th "# Failure"]]
+      (for [{:keys [symbol last-scrape-date last-scrape-result
+                    success-count failure-count]} data]
              [:tr
               [:td (symbol-link symbol)]
+              [:td (or last-scrape-date "NEVER")]
+              [:td (or last-scrape-result "")]
+              [:td (or success-count 0)]
+              [:td (or failure-count 0)]
               [:td
                [:form {:method "post" :action (str "/symbols/" (h symbol))}
                  [:input {:type "submit" :value "Delete"}]]]])]

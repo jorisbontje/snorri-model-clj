@@ -2,7 +2,8 @@
   (:require [appengine-magic.services.datastore :as ds]
             [clojure.string :as string]))
 
-(ds/defentity Symbol [^:key symbol])
+(ds/defentity Symbol [^:key symbol last-scrape-date last-scrape-result
+                      success-count failure-count])
 (ds/defentity Data [^:key date-symbol symbol date close pe es eg])
 
 (defn normalize-symbol [symbol]
@@ -12,8 +13,13 @@
   (ds/query :kind Symbol
             :sort [:symbol]))
 
+(defn get-scrape-symbols [date]
+  (ds/query :kind Symbol
+            :filter (< :last-scrape-date date)
+            :sort [:last-scrape-date :symbol]))
+
 (defn create-symbol! [symbol]
-  (ds/save! (Symbol. (normalize-symbol symbol))))
+  (ds/save! (Symbol. (normalize-symbol symbol) nil nil 0 0)))
 
 (defn delete-symbol! [symbol]
   (ds/delete! (ds/query :kind Symbol
@@ -21,6 +27,20 @@
 
 (defn symbol-exists? [symbol]
   (ds/exists? Symbol (normalize-symbol symbol)))
+
+(defn update-symbol-stats! [symbol date result]
+  (ds/with-transaction
+    (let [curr (ds/retrieve Symbol symbol)
+          success-count (or (:success-count curr) 0)
+          failure-count (or (:failure-count curr) 0)]
+      (ds/save! (assoc curr :last-scrape-date date
+                            :last-scrape-result (name result)
+                            :success-count (if (= result :success)
+                                             (inc success-count)
+                                             success-count)
+                            :failure-count (if (not= result :success)
+                                             (inc failure-count)
+                                             failure-count))))))
 
 (defn unfold-data [{:keys [pe es] :as data}]
   (assoc data :pe (string/split pe #" ")

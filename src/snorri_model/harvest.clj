@@ -11,27 +11,24 @@
 (defn fetch-success? [response]
   (= 200 (:response-code response)))
 
-(defn log-fetch-failure [symbol]
-  (binding [*out* *err*]
-    (println "Error fetching symbol" symbol)))
+(defn log-failure [error symbol date]
+  (util/log error symbol)
+  (store/update-symbol-stats! symbol date :failure))
 
-(defn log-parse-failure [symbol]
-  (binding [*out* *err*]
-    (println "Error parsing html" symbol)))
+(defn store-data! [symbol date data]
+  (store/add-data! (assoc data :symbol symbol :date date))
+  (store/update-symbol-stats! symbol date :success))
 
-(defn store-data! [symbol data]
-  (let [today (util/today)]
-    (store/add-data! (assoc data :symbol symbol :date today))))
-
-(defn process-response [symbol response]
+(defn process-response [symbol date response]
   (let [html (String. (:content response))
         data (scrape/extract-data html)]
     (if data
-      (store-data! symbol data)
-      (log-parse-failure symbol))))
+      (store-data! symbol date data)
+      (log-failure "Error parsing html %s" symbol date))))
 
 (defn harvest [symbol]
-  (let [response (fetch-symbol symbol)]
+  (let [response (fetch-symbol symbol)
+        date (util/today)]
     (if (fetch-success? response)
-      (process-response symbol response)
-      (log-fetch-failure symbol))))
+      (process-response symbol date response)
+      (log-failure "Error fetching html %s" symbol date))))
