@@ -14,7 +14,7 @@
     (doseq [{symbol :symbol} (store/get-symbols)]
       (when-not (store/data-exists? today symbol)
         (println "Queueing " symbol)
-        (tq/add! :url "/tasks/fetch" :params {:symbol symbol})))
+        (tq/add! :url "/tasks/fetch" :queue "fetchqueue" :params {:symbol symbol})))
     (return-200 "OK")))
 
 (defn fetch-symbol [symbol]
