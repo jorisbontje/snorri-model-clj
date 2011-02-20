@@ -5,6 +5,9 @@
 (deftest should-average-bigdecimals
   (is (= 20.16 (average [14.80M 16.90M 16.60M 18.10M 20.70M 23.40M 30.60M]))))
 
+(deftest should-average-bigdecimals-with-nil
+  (is (= 21.05 (average [nil 16.90M 16.60M 18.10M 20.70M 23.40M 30.60M]))))
+
 (deftest should-calc-safe-eg
   (is (= 8.0 (calc-safe-eg 9.0)))
   (is (= 9.0 (calc-safe-eg 11.0))))

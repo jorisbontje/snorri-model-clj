@@ -18,19 +18,20 @@
 (defn filter-percent
   "Remove % from the html."
   [html]
-  (string/replace html #"%" ""))
+  (string/replace html "%" ""))
 
-(defn to-money
-  "Covert the string to a Money representation"
-  [s]
-  (try
-    (bigdec s)
-    (catch NumberFormatException _ nil)))
+(defn filter-plus
+  "Remove + from the html."
+  [html]
+  (string/replace html "+" ""))
 
 (defn match-to-money
   "Convert a regex match to money"
   [m]
-  (map #(to-money (filter-percent (filter-span %))) (rest m)))
+  (map #(-> %
+         (filter-percent)
+         (filter-plus)
+         (filter-span)) (rest m)))
 
 (defn extract-close
   "Extract the closing price from the html"

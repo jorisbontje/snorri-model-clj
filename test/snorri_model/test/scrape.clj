@@ -13,10 +13,10 @@
   "\n<tr><td>Previous Close</td><td style=\"text-align:right\">164.09</td></tr>\n")
 
 (deftest should-extract-close
-  (is (= 164.09 (extract-close html-close))))
+  (is (= "164.09" (extract-close html-close))))
 
 (deftest should-extract-close-with-newlines
-  (is (= 164.09 (extract-close html-close-newlines))))
+  (is (= "164.09" (extract-close html-close-newlines))))
 
 (deftest should-return-nil-extract-close
   (is (= nil (extract-close "xyzzy"))))
@@ -32,10 +32,10 @@
   "<table><thead><tr><th>&nbsp;</th><th style=\"text-align:right\">Avg P/E</th><th style=\"text-align:right\">Price/ Sales</th><th style=\"text-align:right\">Price/ Book</th><th style=\"text-align:right\">Net Profit Margin (%)</th></tr></thead><tbody><tr><td>06/10</td><td style=\"text-align:right\">NA</td><td style=\"text-align:right\">NA</td><td style=\"text-align:right\">NA</td><td style=\"text-align:right\"><span style=\"color:red\">-20.8</span></td></tr><tr><td>06/09</td><td style=\"text-align:right\"><span style=\"color:red\">-10.80</span></td><td style=\"text-align:right\">0.35</td><td style=\"text-align:right\">1.55</td><td style=\"text-align:right\"><span style=\"color:red\">-12.0</span></td></tr><tr><td>12/08</td><td style=\"text-align:right\"><span style=\"color:red\">-14.90</span></td><td style=\"text-align:right\">NA</td><td style=\"text-align:right\">1.79</td><td style=\"text-align:right\">NA</td></tr><tr><td>12/07</td><td style=\"text-align:right\"><span style=\"color:red\">-16.70</span></td><td style=\"text-align:right\">NA</td><td style=\"text-align:right\">3.46</td><td style=\"text-align:right\">NA</td></tr><tr><td>12/06</td><td style=\"text-align:right\">4.30</td><td style=\"text-align:right\">0.22</td><td style=\"text-align:right\">1.08</td><td style=\"text-align:right\">8.0</td></tr><tr><td>12/05</td><td style=\"text-align:right\">23.80</td><td style=\"text-align:right\">0.50</td><td style=\"text-align:right\">2.71</td><td style=\"text-align:right\">2.5</td></tr><tr><td>12/04</td><td style=\"text-align:right\">124.00</td><td style=\"text-align:right\">1.31</td><td style=\"text-align:right\">7.37</td><td style=\"text-align:right\">1.1</td></tr><tr><td>12/03</td><td style=\"text-align:right\">18.30</td><td style=\"text-align:right\">1.51</td><td style=\"text-align:right\">10.22</td><td style=\"text-align:right\">6.7</td></tr><tr><td>12/02</td><td style=\"text-align:right\"><span style=\"color:red\">-35.20</span></td><td style=\"text-align:right\">1.65</td><td style=\"text-align:right\">20.00</td><td style=\"text-align:right\"><span style=\"color:red\">-3.6</span></td></tr><tr><td>12/01</td><td style=\"text-align:right\"><span style=\"color:red\">-13.20</span></td><td style=\"text-align:right\">1.63</td><td style=\"text-align:right\">14.48</td><td style=\"text-align:right\"><span style=\"color:red\">-13.9</span></td></tr></tbody></table>")
 
 (deftest should-extract-10yPE
-  (is (= [15.1 13.3 24.0 26.5 29.2 24.1 38.8 89.8 112.8 -185.8] (extract-10yPE html-10yPE))))
+  (is (= ["15.10" "13.30" "24.00" "26.50" "29.20" "24.10" "38.80" "89.80" "112.80" "-185.80"] (extract-10yPE html-10yPE))))
 
 (deftest should-extract-10yPE-with-NA
-  (is (= [nil -10.8 -14.9 -16.7 4.3 23.8 124.0 18.3 -35.2 -13.2] (extract-10yPE html-10yPE-with-NA))))
+  (is (= ["NA" "-10.80" "-14.90" "-16.70" "4.30" "23.80" "124.00" "18.30" "-35.20" "-13.20"] (extract-10yPE html-10yPE-with-NA))))
 
 (def html-1yES
   "<tr><td>Actual</td><td style=\"text-align:right\">3.67</td><td style=\"text-align:right\">3.33</td><td style=\"text-align:right\">3.51</td><td style=\"text-align:right\">4.64</td><td style=\"text-align:right\">6.43</td></tr>")
@@ -44,21 +44,21 @@
   "<tr><td>Actual</td><td style=\"text-align:right\"><span style=\"color:red\">-0.02</span></td><td style=\"text-align:right\"><span style=\"color:red\">-0.02</span></td><td style=\"text-align:right\"><span style=\"color:red\">-0.03</span></td><td style=\"text-align:right\">0.10</td><td style=\"text-align:right\">0.25</td></tr>")
 
 (deftest should-extract-1yES
-  (is (= [3.33 3.51 4.64 6.43] (extract-1yES html-1yES))))
+  (is (= ["3.33" "3.51" "4.64" "6.43"] (extract-1yES html-1yES))))
 
 (deftest should-extract-1yES-with-negatives
-  (is (= [-0.02 -0.03 0.1 0.25] (extract-1yES html-1yES-with-negatives))))
+  (is (= ["-0.02" "-0.03" "0.10" "0.25"] (extract-1yES html-1yES-with-negatives))))
 
 (def html-5yEG
   "<tr><td>Company</td><td style=\"text-align:right\"><span style=\"color:red\">-22.90%</span></td><td style=\"text-align:right\"><span style=\"color:green\">+117.30%</span></td><td style=\"text-align:right\"><span style=\"color:green\">+21.20%</span></td><td style=\"text-align:right\"><span style=\"color:green\">+15.00%</span></td><td style=\"text-align:right\">15.90</td></tr>")
 
 (deftest should-extract-5yEG
-  (is (= 15.00 (extract-5yEG html-5yEG))))
+  (is (= "15.00" (extract-5yEG html-5yEG))))
 
 (def html-bbby
   (slurp "test/snorri_model/bbby.html"))
 
 (deftest should-extract-data-bbby
-  (is (= {:close 49.44, :pe [14.80 16.90 16.60 18.10 20.70 23.40 30.60 33.90 40.50 35.20]
-          :es [0.86 0.52 0.70 0.74], :eg 14.20}
+  (is (= {:close "49.44", :pe ["14.80" "16.90" "16.60" "18.10" "20.70" "23.40" "30.60" "33.90" "40.50" "35.20"]
+          :es ["0.86" "0.52" "0.70" "0.74"], :eg "14.20"}
          (extract-data html-bbby))))

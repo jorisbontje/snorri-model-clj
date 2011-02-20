@@ -1,5 +1,10 @@
 (ns snorri-model.process)
 
+(defn filter-nils
+  "Remove nils from the list."
+  [l]
+  (filter #(not (nil? %)) l))
+
 (defn filter-outliers
   "Remove outliers from the list."
   [lower upper l]
@@ -9,8 +14,17 @@
   "Calculate the average of the given numbers."
   [l]
   (if-not (empty? l)
-    (let [sum (apply + l)]
-      (.divide (bigdec sum) (bigdec (count l)) java.math.BigDecimal/ROUND_HALF_UP))))
+    (let [not-nils (filter-nils l)
+          sum (apply + not-nils)
+          n (count not-nils)]
+      (.divide (bigdec sum) (bigdec n) java.math.BigDecimal/ROUND_HALF_UP))))
+
+(defn to-money
+  "Covert the string to a Money representation"
+  [s]
+  (try
+    (bigdec s)
+    (catch NumberFormatException _ nil)))
 
 (defn round
   "Round the number to 2 digits"
@@ -46,10 +60,10 @@
     :else "HOLD"))
 
 (defn enrich-data [{:keys [close pe es eg] :as data}]
-  (let [avg-pe (calc-avg-pe pe)
-        sum-es (calc-sum-es es)
-        safe-eg (calc-safe-eg eg)
+  (let [avg-pe (calc-avg-pe (map to-money pe))
+        sum-es (calc-sum-es (map to-money es))
+        safe-eg (calc-safe-eg (to-money eg))
         exp (calc-exp avg-pe sum-es safe-eg)
-        gain (calc-gain close exp)
+        gain (calc-gain (to-money close) exp)
         advise (give-advise gain)]
     (assoc data :avg-pe avg-pe :sum-es sum-es :safe-eg safe-eg :exp exp :gain gain :advise advise)))
