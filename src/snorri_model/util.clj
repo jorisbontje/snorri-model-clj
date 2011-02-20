@@ -7,5 +7,8 @@
    (.format (doto (java.text.SimpleDateFormat. pattern)
                   (.setTimeZone (java.util.TimeZone/getTimeZone "UTC"))) date)))
 
-(defn now []
+(defn today []
   (format-date (java.util.Date.)))
+
+(defn now []
+  (format-date "yyyy-MM-dd HH:mm:ss.SSS" (java.util.Date.)))

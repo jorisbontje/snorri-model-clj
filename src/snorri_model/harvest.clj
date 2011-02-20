@@ -18,8 +18,8 @@
   (println "Error parsing html" symbol))
 
 (defn store-data! [symbol data]
-  (let [now (util/now)]
-    (store/add-data! (assoc data :symbol symbol :date now))))
+  (let [today (util/today)]
+    (store/add-data! (assoc data :symbol symbol :date today))))
 
 (defn process-response [symbol response]
   (let [html (String. (:content response))

@@ -1,7 +1,8 @@
 (ns snorri-model.api
   (:require [appengine-magic.services.task-queues :as tq]
             [snorri-model.harvest :as harvest]
-            [snorri-model.store :as store]))
+            [snorri-model.store :as store]
+            [snorri-model.util :as util]))
 
 (defn return-200 [message]
   {:status 200
@@ -9,11 +10,12 @@
    :body (str message "\r\n")})
 
 (defn daily-update []
-  (do
+  (let [today (util/today)]
     (doseq [{symbol :symbol} (store/get-symbols)]
-      (println "Queueing " symbol)
-      (tq/add! :url "/tasks/fetch" :params {:symbol symbol}))
-  (return-200 "OK")))
+      (when-not (store/data-exists? today symbol)
+        (println "Queueing " symbol)
+        (tq/add! :url "/tasks/fetch" :params {:symbol symbol})))
+    (return-200 "OK")))
 
 (defn fetch-symbol [symbol]
   (do (println "Fetching symbol: " symbol)

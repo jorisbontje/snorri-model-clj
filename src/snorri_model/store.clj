@@ -35,3 +35,6 @@
 (defn add-data! [{:keys [symbol date close pe es eg]}]
   (ds/save! (Data. (str date "_" symbol) symbol date close
                    (string/join " " pe) (string/join " " es) eg)))
+
+(defn data-exists? [date symbol]
+  (ds/exists? Data (str date "_" symbol)))
