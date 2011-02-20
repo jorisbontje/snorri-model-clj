@@ -45,7 +45,8 @@
   (round (average (filter-outliers pe-min pe-max (filter-nils l)))))
 
 (defn calc-sum-es [l]
-  (round (apply + l)))
+  (check-numbers l
+    (round (apply + l))))
 
 (defn calc-safe-eg [eg]
   (check-numbers [eg]
