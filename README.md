@@ -1,6 +1,7 @@
 # snorri-model
 
-Track stocks, perform analysis and give trading advise using snorri-model by Henrik Oude Nijhuis.
+Track stocks, perform analysis and give trading advise using the snorri-model
+from Henrik Oude Nijhuis.
 
 ## Run interactive
 $ lein repl
