@@ -5,16 +5,22 @@
 (ds/defentity Symbol [^:key symbol])
 (ds/defentity Data [^:key date-symbol symbol date close pe es eg])
 
+(defn normalize-symbol [symbol]
+  (string/trim (string/upper-case symbol)))
+
 (defn get-symbols []
   (ds/query :kind Symbol
             :sort [:symbol]))
 
 (defn create-symbol! [symbol]
-  (ds/save! (Symbol. (string/trim
-                       (string/upper-case symbol)))))
+  (ds/save! (Symbol. (normalize-symbol symbol))))
 
 (defn delete-symbol! [symbol]
-  (ds/delete! (ds/query :kind Symbol :filter (= :symbol symbol))))
+  (ds/delete! (ds/query :kind Symbol
+                        :filter (= :symbol (normalize-symbol symbol)))))
+
+(defn symbol-exists? [symbol]
+  (ds/exists? Symbol (normalize-symbol symbol)))
 
 (defn unfold-data [{:keys [pe es] :as data}]
   (assoc data :pe (string/split pe #" ")

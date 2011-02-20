@@ -3,6 +3,10 @@
 Track stocks, perform analysis and give trading advise using the snorri-model
 from Henrik Oude Nijhuis.
 
+Uses Google Appengine via the helpful [appengine-magic][1] library.
+
+[1]: https://github.com/gcv/appengine-magic/
+
 ## Run interactive
 $ lein repl
 (require '[appengine-magic.core :as ae])

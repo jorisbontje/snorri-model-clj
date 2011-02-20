@@ -1,50 +1,52 @@
 (ns snorri-model.core
   (:require [appengine-magic.core :as ae]
-            [appengine-magic.services.user :as user]
+            [snorri-model.admin :as admin]
+            [snorri-model.api :as api]
             [snorri-model.middleware :as mw]
-            [snorri-model.process :as process]
-            [snorri-model.store :as store]
-            [snorri-model.view :as view])
+            [snorri-model.public :as public])
   (:use compojure.core
         ring.middleware.reload
         ring.middleware.params
         ring.util.response))
 
-(defroutes snorri-model-app-handler
+(defroutes api-routes
+  (GET "/cron/daily" []
+    (api/daily-update))
+  (POST "/tasks/fetch" [symbol]
+    (api/fetch-symbol symbol)))
+
+(defroutes public-routes
   (GET "/" []
-    (let [data (store/get-data)
-          enriched-data (map process/enrich-data data)]
-      (view/layout
-        (view/index enriched-data))))
+    (public/index)))
+
+(defroutes admin-routes
   (GET "/symbols/" []
-    (if (not (and (user/user-logged-in?) (user/user-admin?)))
-      (redirect "/")
-      (view/layout 
-        (view/symbols (store/get-symbols)))))
+    (admin/index))
   (POST "/symbols/" [symbol]
-    (if (not (and (user/user-logged-in?) (user/user-admin?)))
-      (redirect "/")
-      (do
-        (store/create-symbol! symbol)
-        (redirect "/symbols/"))))
+    (admin/add-symbol symbol))
   (POST "/symbols/:symbol" [symbol]
-    (if (not (and (user/user-logged-in?) (user/user-admin?)))
-      (redirect "/")
-      (do
-        (store/delete-symbol! symbol)
-        (redirect "/symbols/"))))
+    (admin/delete-symbol symbol)))
+
+(defroutes error-routes
   (ANY "/*" _
     {:status 404
      :headers {"Content-Type" "text/plain"}
      :body "not found"}))
 
+(defroutes dynamic-routes
+  api-routes
+  public-routes
+  admin-routes
+  error-routes)
+
 (def interactive?
   (= :interactive (ae/appengine-environment-type)))
 
 (def app
-  (-> #'snorri-model-app-handler
+  (->
+    #'dynamic-routes
     (wrap-params)
-    (mw/wrap-if interactive? wrap-reload '[snorri-model.core snorri-model.process
-                                           snorri-model.store snorri-model.view])))
+    (mw/wrap-if interactive? wrap-reload '[snorri-model.admin snorri-model.api
+                                           snorri-model.core snorri-model.public])))
 
 (ae/def-appengine-app snorri-model-app #'app)
