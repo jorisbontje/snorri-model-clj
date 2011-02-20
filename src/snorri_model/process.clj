@@ -36,7 +36,9 @@
 (defn round
   "Round the number to 2 digits"
   [n]
-  (Double/parseDouble (format "%.2f" n)))
+  (try
+    (Double/parseDouble (format "%.2f" n))
+    (catch NumberFormatException _ "XX")))
 
 (def pe-min 7)
 (def pe-max 32)

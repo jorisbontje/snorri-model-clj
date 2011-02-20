@@ -25,7 +25,7 @@
   (is (= 243.2 (calc-exp 11.0 12.0 13.0))))
 
 (deftest should-calc-gain
-  (is (= 0.0 (calc-gain 0.0 1.0)))
+  (is (= "NA" (calc-gain 0.0 1.0)))
   (is (= 15.05 (calc-gain 12.4 25.0))))
 
 (deftest should-give-advise
