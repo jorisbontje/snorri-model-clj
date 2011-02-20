@@ -2,11 +2,20 @@
   (:use [snorri-model.process] :reload)
   (:use [clojure.test :only [deftest is]]))
 
+(deftest should-check-numbers
+  (is (= 5 (check-numbers [1] 5)))
+  (is (= "NA" (check-numbers ["x"] 5)))
+  (is (= 5 (check-numbers [1 2] 5)))
+  (is (= "NA" (check-numbers [1 "x"] 5))))
+
 (deftest should-average-bigdecimals
   (is (= 20.16 (average [14.80M 16.90M 16.60M 18.10M 20.70M 23.40M 30.60M]))))
 
 (deftest should-average-bigdecimals-with-nil
   (is (= 21.05 (average [nil 16.90M 16.60M 18.10M 20.70M 23.40M 30.60M]))))
+
+(deftest should-average-bigdecimals-with-NA
+  (is (= 21.05 (average ["NA" 16.90M 16.60M 18.10M 20.70M 23.40M 30.60M]))))
 
 (deftest should-calc-safe-eg
   (is (= 8.0 (calc-safe-eg 9.0)))
@@ -32,3 +41,8 @@
          (enrich-data {:symbol "BBBY" :close 15.12
                        :pe [14.80 16.90 16.60 18.10 20.70 23.40 30.60 33.90 40.50 35.20]
                        :es [0.86 0.52 0.70 0.74] :eg 8.3}))))
+
+(deftest should-enrich-data-with-NA
+  (is (= {:gain "NA", :es ["1.23"], :close "10.12", :safe-eg "NA", :advise "NA",
+          :avg-pe 10.0, :exp "NA", :pe ["10.0"], :eg "NA", :sum-es 1.23}
+         (enrich-data {:close "10.12" :pe ["10.0"] :es ["1.23"] :eg "NA"}))))
