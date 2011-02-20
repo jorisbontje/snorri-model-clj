@@ -7,11 +7,8 @@ Uses Google Appengine via the helpful [appengine-magic][1] library.
 
 [1]: https://github.com/gcv/appengine-magic/
 
-## Run interactive
+## Run interactively
 $ lein repl
-(require '[appengine-magic.core :as ae])
-(use '[snorri-model.core] :reload-all)
-(ae/serve snorri-model-app)
 
 ## Run devserver
 $ lein appengine-prepare

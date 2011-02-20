@@ -5,4 +5,5 @@
                  [ring/ring-core "0.3.6"]
                  [ring/ring-devel "0.3.6"]
                  [compojure "0.6.0"]]
-  :dev-dependencies [[appengine-magic "0.4.0-SNAPSHOT"]])
+  :dev-dependencies [[appengine-magic "0.4.0-SNAPSHOT"]]
+  :repl-init-script "src/snorri_model/init_repl.clj")

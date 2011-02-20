@@ -47,6 +47,7 @@
     #'dynamic-routes
     (wrap-params)
     (mw/wrap-if interactive? wrap-reload '[snorri-model.admin snorri-model.api
-                                           snorri-model.core snorri-model.public])))
+                                           snorri-model.core snorri-model.public
+                                           snorri-model.view])))
 
 (ae/def-appengine-app snorri-model-app #'app)
