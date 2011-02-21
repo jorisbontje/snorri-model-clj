@@ -17,11 +17,8 @@
           [:div#header
             [:div#title
               [:h1 "Snorri-model"]]
-            (if (user/user-logged-in?)
-              (link-to (user/logout-url) "Logout")
-              (link-to (user/login-url) "Login"))]
           [:div#content
-            content]]])))
+            content]]]])))
 
 (defn symbol-link [symbol]
   (link-to (scrape/get-scrape-url (h symbol)) (h symbol)))
@@ -41,7 +38,15 @@
 
 (defn symbols [data]
   (html
+    [:div#admin
+      (link-to (user/logout-url :destination "/") "Logout")]
     [:div#data
+     [:form {:method "post" :action "/symbols/"}
+      [:fieldset
+       [:legend "New Symbol"]
+        [:p
+         [:input.text {:type "text" :id "symbol" :name "symbol" :maxlength "16"}]]
+         [:input {:type "submit" :value "Add"}]]]
      [:table
       [:tr
        [:th "Symbol"]
@@ -59,11 +64,5 @@
               [:td (or failure-count 0)]
               [:td
                [:form {:method "post" :action (str "/symbols/" (h symbol))}
-                 [:input {:type "submit" :value "Delete"}]]]])]
-     [:form {:method "post" :action "/symbols/"}
-      [:fieldset
-       [:legend "New Symbol"]
-        [:p
-         [:input.text {:type "text" :id "symbol" :name "symbol" :maxlength "16"}]]
-         [:input {:type "submit" :value "Add"}]]]]))
+                 [:input {:type "submit" :value "Delete"}]]]])]]))
 

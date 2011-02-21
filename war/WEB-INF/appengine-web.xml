@@ -5,4 +5,8 @@
   <static-files/>
   <resource-files/>
 
+  <admin-console>
+    <page name="Symbols Admin" url="/symbols/" />
+  </admin-console>
+
 </appengine-web-app>
