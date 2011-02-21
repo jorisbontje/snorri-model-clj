@@ -11,14 +11,20 @@
    :headers {"Content-Type" "text/plain"}
    :body (str message "\r\n")})
 
-(defn daily-update []
+(defn daily-update
+  "Perform the daily update, queue up all the symbols that haven't been scraped
+  already for today."
+  []
   (let [today (util/today)]
     (println "Queueing symbols")
     (doseq [{symbol :symbol} (store/get-scrape-symbols today)]
       (tq/add! :url "/tasks/fetch" :queue "fetchqueue" :params {:symbol symbol}))
     (return-200 "OK")))
 
-(defn fetch-symbol [symbol]
+(defn fetch-symbol
+  "Fetch and process the given symbol. Always returns success, to prevent
+  endless requeueing in case of scrape/parse errors."
+  [symbol]
   (do (println "Fetching symbol" symbol)
     (if (store/symbol-exists? symbol)
       (do

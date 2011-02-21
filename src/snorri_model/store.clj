@@ -3,33 +3,49 @@
   (:require [appengine-magic.services.datastore :as ds]
             [clojure.string :as string]))
 
+;; DataStore definitions
 (ds/defentity Symbol [^:key symbol last-scrape-date last-scrape-result
                       success-count failure-count])
 (ds/defentity Data [^:key date-symbol symbol date close pe es eg])
 
-(defn normalize-symbol [symbol]
+(defn normalize-symbol
+  "Remove spaces and case to uppercase."
+  [symbol]
   (string/trim (string/upper-case symbol)))
 
-(defn get-symbols []
+(defn get-symbols
+  "Return all symbols from the DS."
+  []
   (ds/query :kind Symbol
             :sort [:symbol]))
 
-(defn get-scrape-symbols [date]
+(defn get-scrape-symbols
+  "Return all symbols that are not yet scraped on the given date."
+  [date]
   (ds/query :kind Symbol
             :filter (< :last-scrape-date date)
             :sort [:last-scrape-date :symbol]))
 
-(defn create-symbol! [symbol]
+(defn create-symbol!
+  "Store the new symbol to the DS."
+  [symbol]
   (ds/save! (Symbol. (normalize-symbol symbol) nil nil 0 0)))
 
-(defn delete-symbol! [symbol]
+(defn delete-symbol!
+  "Delete the symbol from the DS."
+  [symbol]
   (ds/delete! (ds/query :kind Symbol
                         :filter (= :symbol (normalize-symbol symbol)))))
 
-(defn symbol-exists? [symbol]
+(defn symbol-exists?
+  "Check if the symbol already exists in the DS."
+  [symbol]
   (ds/exists? Symbol (normalize-symbol symbol)))
 
-(defn update-symbol-stats! [symbol date result]
+;; TODO room for improvement / cleanup here.
+(defn update-symbol-stats!
+  "Update the scrape statistics for the given symbol."
+  [symbol date result]
   (ds/with-transaction
     (let [curr (ds/retrieve Symbol symbol)
           success-count (or (:success-count curr) 0)
@@ -43,21 +59,32 @@
                                              (inc failure-count)
                                              failure-count))))))
 
-(defn unfold-data [{:keys [pe es] :as data}]
+(defn unfold-data
+  "Convert the serialized list of PE and ES back to actual lists."
+  [{:keys [pe es] :as data}]
   (assoc data :pe (string/split pe #" ")
               :es (string/split es #" ")))
 
-(defn get-data [date]
+(defn get-data
+  "Return all stock data for the given date."
+  [date]
   (map unfold-data (ds/query :kind Data
                              :filter (= :date date)
                              :sort [:symbol])))
 
-(defn get-last-date []
+;; XXX Performance issue?
+(defn get-last-date
+  "Return the most recent date we have stock data for."
+  []
   (:date (first (ds/query :kind Data :sort [[:date :desc]]))))
 
-(defn add-data! [{:keys [symbol date close pe es eg]}]
+(defn add-data!
+  "Add stock data to the DS. Lists are serialized into strings."
+  [{:keys [symbol date close pe es eg]}]
   (ds/save! (Data. (str date "_" symbol) symbol date close
                    (string/join " " pe) (string/join " " es) eg)))
 
-(defn data-exists? [date symbol]
+(defn data-exists?
+  "Check if stock data exists for given date and symbol."
+  [date symbol]
   (ds/exists? Data (str date "_" symbol)))

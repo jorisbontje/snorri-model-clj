@@ -4,7 +4,9 @@
             [snorri-model.store :as store]
             [snorri-model.view :as view]))
 
-(defn index []
+(defn index
+  "Index page."
+  []
   (let [last-date (store/get-last-date)
         data (store/get-data last-date)
         enriched-data (map process/enrich-data data)]

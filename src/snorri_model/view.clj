@@ -5,7 +5,9 @@
   (:use hiccup.core
         hiccup.page-helpers))
 
-(defn layout [& content]
+(defn layout
+  "Render default page."
+  [& content]
   (html
     (doctype :xhtml-strict)
     (xhtml-tag "en"
@@ -21,10 +23,14 @@
           [:div#content
             content]]]])))
 
-(defn symbol-link [symbol]
+(defn symbol-link
+  "External link for a stock symbol."
+  [symbol]
   (link-to (scrape/get-scrape-url (h symbol)) (h symbol)))
 
-(defn index [last-date data]
+(defn index
+  "Render home page body."
+  [last-date data]
   (html
     [:div#data
      [:p "Last update: " last-date]
@@ -37,7 +43,9 @@
               [:td (symbol-link symbol)] [:td avg-pe] [:td sum-es] [:td eg] [:td safe-eg]
               [:td close] [:td exp] [:td gain] [:td advise]])]]))
 
-(defn symbols [data]
+(defn symbols
+  "Render symbol page body."
+  [data]
   (html
     [:div#admin
       (link-to (user/logout-url :destination "/") "Logout")]

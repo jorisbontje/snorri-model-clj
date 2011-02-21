@@ -27,7 +27,7 @@
   (string/replace html "+" ""))
 
 (defn match-to-money
-  "Convert a regex match to money"
+  "Convert a regex match result to money"
   [m]
   (map #(-> %
          (filter-percent)

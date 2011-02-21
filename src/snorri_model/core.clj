@@ -11,16 +11,19 @@
         ring.middleware.params
         ring.util.response))
 
+;; API tasks not ment to be called by humans.
 (defroutes api-routes
   (GET "/cron/daily" []
     (api/daily-update))
   (POST "/tasks/fetch" [symbol]
     (api/fetch-symbol symbol)))
 
+;; The public (home)page.
 (defroutes public-routes
   (GET "/" []
     (public/index)))
 
+;; Admin tasks, security is done via web.xml
 (defroutes admin-routes
   (GET "/symbols/" []
     (admin/index))

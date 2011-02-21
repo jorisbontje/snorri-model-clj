@@ -5,7 +5,9 @@
         [clojure.contrib.repl-utils :only (show)]
         [snorri-model.core]))
 
-(defn reload! []
+(defn reload!
+  "Force a reload of everything."
+  []
   (require 'snorri-model.core :reload-all))
 
 (ae/serve snorri-model-app)
