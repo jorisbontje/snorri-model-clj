@@ -17,6 +17,30 @@
 (deftest should-average-bigdecimals-with-NA
   (is (= 21.05 (average ["NA" 16.90M 16.60M 18.10M 20.70M 23.40M 30.60M]))))
 
+
+;; tests to discover why DEO was giving a NumberFormatException: For input string: "nu" on calling calc-avg-pe
+(deftest should-to-money-DEO
+  (is (= [159.60M 146.70M 235.40M 251.50M 148.40M 191.60M 145.00M 519.30M 96.90M 283.90M]
+         (map to-money ["159.60" "146.70" "235.40" "251.50" "148.40" "191.60" "145.00" "519.30" "96.90" "283.90"]))))
+
+(deftest should-filter-all-outliers-DEO
+  (let [pe [159.60M 146.70M 235.40M 251.50M 148.40M 191.60M 145.00M 519.30M 96.90M 283.90M]]
+    (is (= [] (filter-outliers pe-min pe-max pe)))))
+
+(deftest should-average-empty-list-DEO
+  (is (= nil (average []))))
+
+(deftest should-round-nil-DEO
+  (is (= "NA" (round nil))))
+
+(deftest should-round-invalid-DEO
+  (is (= "XX" (round "invalid"))))
+
+;; NA because all are filtered out
+(deftest should-calc-avg-pe-DEO
+  (let [pe [159.60M 146.70M 235.40M 251.50M 148.40M 191.60M 145.00M 519.30M 96.90M 283.90M]]
+    (is (= "NA" (calc-avg-pe pe)))))
+
 (deftest should-calc-safe-eg
   (is (= 8.0 (calc-safe-eg 9.0)))
   (is (= 9.0 (calc-safe-eg 11.0))))

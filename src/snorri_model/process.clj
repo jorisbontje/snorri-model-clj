@@ -31,14 +31,16 @@
   [s]
   (try
     (bigdec s)
-    (catch NumberFormatException _ nil)))
+    (catch IllegalArgumentException _ nil)))
 
 (defn round
   "Round the number to 2 digits"
   [n]
-  (try
-    (Double/parseDouble (format "%.2f" n))
-    (catch NumberFormatException _ "XX")))
+  (if (nil? n)
+    "NA"
+    (try
+      (Double/parseDouble (format "%.2f" n))
+      (catch IllegalArgumentException _ "XX"))))
 
 (def pe-min 7)
 (def pe-max 32)
