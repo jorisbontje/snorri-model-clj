@@ -18,6 +18,7 @@
 
   <security-constraint>
     <web-resource-collection>
+        <url-pattern>/cron/*</url-pattern>
         <url-pattern>/symbols/*</url-pattern>
         <url-pattern>/tasks/*</url-pattern>
     </web-resource-collection>

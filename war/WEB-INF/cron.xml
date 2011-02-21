@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/cron/daily</url>
+    <description>Fetch symbols for every workday</description>
+    <schedule>every tue,wed,thu,fri,sat 04:00</schedule>
+  </cron>
+</cronentries>
