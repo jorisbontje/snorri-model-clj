@@ -53,10 +53,12 @@
   (round (average (filter-outliers pe-min pe-max (filter-nils l)))))
 
 (defn calc-sum-es
-  "Calculate the sum of the (quarterly) earning surprise values."
+  "Calculate the sum of the last 4 (quarterly) earning surprise values."
   [l]
-  (check-numbers l
-    (round (apply + l))))
+  (let [not-nils (filter-nils l)]
+    (if (>= (count not-nils) 4)
+      (round (apply + (take-last 4 not-nils)))
+      "NA")))
 
 (defn calc-safe-eg
   "Tune the Earnings Growth rate a bit down."

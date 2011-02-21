@@ -48,9 +48,9 @@
       (map #(first (match-to-money %)) pe-lines))))
 
 (defn extract-1yES
-  "Extract the actual Earnings Surprise of the last 4 quarters from the html"
+  "Extract the actual Earnings Surprise of the last quarters from the html"
   [html]
-  (if-let [match (re-find #"<tr><td>Actual</td><td.*?>.*?</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td></tr>" html)]
+  (if-let [match (re-find #"<tr><td>Actual</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td><td.*?>(.*?)</td></tr>" html)]
     (match-to-money match)))
 
 (defn extract-5yEG

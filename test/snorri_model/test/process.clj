@@ -41,6 +41,13 @@
   (let [pe [159.60M 146.70M 235.40M 251.50M 148.40M 191.60M 145.00M 519.30M 96.90M 283.90M]]
     (is (= "NA" (calc-avg-pe pe)))))
 
+(deftest should-sum-es
+  (is (= 10.0 (calc-sum-es [1.0 2.0 3.0 4.0])))
+  (is (= 14.0 (calc-sum-es [1.0 2.0 3.0 4.0 5.0])))
+  (is (= 14.0 (calc-sum-es ["NA" 2.0 3.0 4.0 5.0])))
+  (is (= 10.0 (calc-sum-es [1.0 2.0 3.0 4.0 "NA"])))
+  (is (= "NA" (calc-sum-es ["NA" 2.0 3.0 4.0 "NA"]))))
+
 (deftest should-calc-safe-eg
   (is (= 8.0 (calc-safe-eg 9.0)))
   (is (= 9.0 (calc-safe-eg 11.0))))
@@ -67,6 +74,6 @@
                        :es [0.86 0.52 0.70 0.74] :eg 8.3}))))
 
 (deftest should-enrich-data-with-NA
-  (is (= {:gain "NA", :es ["1.23"], :close "10.12", :safe-eg "NA", :advise "NA",
-          :avg-pe 10.0, :exp "NA", :pe ["10.0"], :eg "NA", :sum-es 1.23}
-         (enrich-data {:close "10.12" :pe ["10.0"] :es ["1.23"] :eg "NA"}))))
+  (is (= {:gain "NA", :es ["1.23" "2.31" "14.30" "6.39"], :close "10.12", :safe-eg "NA", :advise "NA",
+          :avg-pe 10.0, :exp "NA", :pe ["10.0"], :eg "NA", :sum-es 24.23}
+         (enrich-data {:close "10.12" :pe ["10.0"] :es ["1.23" "2.31" "14.30" "6.39"] :eg "NA"}))))

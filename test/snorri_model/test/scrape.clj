@@ -44,10 +44,10 @@
   "<tr><td>Actual</td><td style=\"text-align:right\"><span style=\"color:red\">-0.02</span></td><td style=\"text-align:right\"><span style=\"color:red\">-0.02</span></td><td style=\"text-align:right\"><span style=\"color:red\">-0.03</span></td><td style=\"text-align:right\">0.10</td><td style=\"text-align:right\">0.25</td></tr>")
 
 (deftest should-extract-1yES
-  (is (= ["3.33" "3.51" "4.64" "6.43"] (extract-1yES html-1yES))))
+  (is (= ["3.67" "3.33" "3.51" "4.64" "6.43"] (extract-1yES html-1yES))))
 
 (deftest should-extract-1yES-with-negatives
-  (is (= ["-0.02" "-0.03" "0.10" "0.25"] (extract-1yES html-1yES-with-negatives))))
+  (is (= ["-0.02" "-0.02" "-0.03" "0.10" "0.25"] (extract-1yES html-1yES-with-negatives))))
 
 (def html-5yEG
   "<tr><td>Company</td><td style=\"text-align:right\"><span style=\"color:red\">-22.90%</span></td><td style=\"text-align:right\"><span style=\"color:green\">+117.30%</span></td><td style=\"text-align:right\"><span style=\"color:green\">+21.20%</span></td><td style=\"text-align:right\"><span style=\"color:green\">+15.00%</span></td><td style=\"text-align:right\">15.90</td></tr>")
@@ -60,5 +60,5 @@
 
 (deftest should-extract-data-bbby
   (is (= {:close "49.44", :pe ["14.80" "16.90" "16.60" "18.10" "20.70" "23.40" "30.60" "33.90" "40.50" "35.20"]
-          :es ["0.86" "0.52" "0.70" "0.74"], :eg "14.20"}
+          :es ["0.58" "0.86" "0.52" "0.70" "0.74"], :eg "14.20"}
          (extract-data html-bbby))))
