@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes autoGenerate="true">
+
+    <datastore-index kind="Symbol" ancestor="false" source="auto">
+        <property name="last-scrape-date" direction="asc"/>
+        <property name="symbol" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="Data" ancestor="false" source="auto">
+        <property name="last-scrape-date" direction="asc"/>
+        <property name="symbol" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="Data" ancestor="false" source="auto">
+        <property name="date" direction="asc"/>
+        <property name="symbol" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>
