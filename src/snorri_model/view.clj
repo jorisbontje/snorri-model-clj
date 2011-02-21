@@ -26,9 +26,10 @@
 (defn symbol-link [symbol]
   (link-to (scrape/get-scrape-url (h symbol)) (h symbol)))
 
-(defn index [data]
+(defn index [last-date data]
   (html
     [:div#data
+     [:p "Last update: " last-date]
      [:table {:border 1}
       [:tr
        [:th "Symbol"] [:th "10yAvgPE"] [:th "1yES"] [:th "5yExpEG"] [:th "Safe5yExpEG"]

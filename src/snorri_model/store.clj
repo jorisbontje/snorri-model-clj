@@ -46,8 +46,10 @@
   (assoc data :pe (string/split pe #" ")
               :es (string/split es #" ")))
 
-(defn get-data []
-  (map unfold-data (ds/query :kind Data :sort [:symbol])))
+(defn get-data [date]
+  (map unfold-data (ds/query :kind Data
+                             :filter (= :date date)
+                             :sort [:symbol])))
 
 (defn get-last-date []
   (:date (first (ds/query :kind Data :sort [[:date :desc]]))))
