@@ -1,9 +1,9 @@
-(ns user)
-(use 'clojure.stacktrace)
-(use '[clojure.contrib.repl-utils :only (show)]) 
-
-(require '[appengine-magic.core :as ae])
-(use '[snorri-model.core])
+(ns user
+  "Init script for Leiningen REPL."
+  (:require [appengine-magic.core :as ae])
+  (:use [clojure.stacktrace]
+        [clojure.contrib.repl-utils :only (show)]
+        [snorri-model.core]))
 
 (defn reload! []
   (require 'snorri-model.core :reload-all))

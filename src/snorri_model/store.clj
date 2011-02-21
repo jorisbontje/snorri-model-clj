@@ -1,4 +1,5 @@
 (ns snorri-model.store
+  "Storage layer to Appengine's Datastore"
   (:require [appengine-magic.services.datastore :as ds]
             [clojure.string :as string]))
 

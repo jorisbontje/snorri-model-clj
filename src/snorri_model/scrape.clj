@@ -1,4 +1,5 @@
 (ns snorri-model.scrape
+  "Scrape HTML."
   (:require [appengine-magic.services.url-fetch :as url-fetch]
             [clojure.string :as string]
             [snorri-model.process :as process]))
@@ -59,6 +60,7 @@
     (first (match-to-money match))))
 
 (defn extract-data [html]
+  "Extract all data from given html."
   (let [close (extract-close html)
         pe (extract-10yPE html)
         es (extract-1yES html)

@@ -1,7 +1,7 @@
-# snorri-model
+# Snorri-model
 
-Track stocks, perform analysis and give trading advise using the snorri-model
-from Henrik Oude Nijhuis.
+Tracks stocks, performs analysis and gives trading advise using the
+Snorri-model by Henrik Oude Nijhuis.
 
 Uses Google Appengine via the helpful [appengine-magic][1] library.
 

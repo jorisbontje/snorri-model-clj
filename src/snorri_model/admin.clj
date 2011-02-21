@@ -1,4 +1,5 @@
 (ns snorri-model.admin
+  "This namespace contains everything admin related."
   (:require [snorri-model.store :as store]
             [snorri-model.view :as view])
   (:use ring.util.response))

@@ -1,4 +1,5 @@
 (ns snorri-model.public
+  "Hander for public (home)page."
   (:require [snorri-model.process :as process]
             [snorri-model.store :as store]
             [snorri-model.view :as view]))

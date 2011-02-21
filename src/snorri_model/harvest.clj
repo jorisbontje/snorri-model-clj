@@ -1,4 +1,5 @@
 (ns snorri-model.harvest
+  "Harvest the symbol tickers."
   (:require [appengine-magic.services.url-fetch :as uf]
             [snorri-model.scrape :as scrape]
             [snorri-model.store :as store]

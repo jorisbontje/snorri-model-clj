@@ -1,4 +1,5 @@
-(ns snorri-model.util)
+(ns snorri-model.util
+  "Utilities, date and logging related.")
 
 (defn format-date
   ([date]

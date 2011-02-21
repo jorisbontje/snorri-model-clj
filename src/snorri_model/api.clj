@@ -1,4 +1,5 @@
 (ns snorri-model.api
+  "This namespace contains API tasks such as cron and task queue calls."
   (:require [appengine-magic.services.task-queues :as tq]
             [clj-stacktrace.repl :as strp]
             [snorri-model.harvest :as harvest]

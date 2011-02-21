@@ -1,4 +1,5 @@
-(ns snorri-model.process)
+(ns snorri-model.process
+  "Process the data, calculate derivative values.")
 
 (defmacro check-numbers
   "Check if every argument a number."

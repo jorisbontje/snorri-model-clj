@@ -1,4 +1,5 @@
 (ns snorri-model.view
+  "HTML building"
   (:require [appengine-magic.services.user :as user]
             [snorri-model.scrape :as scrape])
   (:use hiccup.core

@@ -1,4 +1,6 @@
 (ns snorri-model.core
+  "The application starts here. This namespace defines the routes
+  and dispatches GET and POST requests to the right handlers."
   (:require [appengine-magic.core :as ae]
             [snorri-model.admin :as admin]
             [snorri-model.api :as api]
@@ -39,6 +41,7 @@
   admin-routes
   error-routes)
 
+;; Are we running in the REPL?
 (def interactive?
   (= :interactive (ae/appengine-environment-type)))
 
