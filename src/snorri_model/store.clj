@@ -9,7 +9,7 @@
 (ds/defentity Data [^:key date-symbol symbol date close pe es eg])
 
 (defn normalize-symbol
-  "Remove spaces and case to uppercase."
+  "Remove spaces and concert to uppercase."
   [symbol]
   (string/trim (string/upper-case symbol)))
 
