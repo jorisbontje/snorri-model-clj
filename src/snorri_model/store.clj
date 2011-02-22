@@ -76,7 +76,7 @@
 (defn get-last-date
   "Return the most recent date we have stock data for."
   []
-  (:date (first (ds/query :kind Data :sort [[:date :desc]]))))
+  (:date (first (ds/query :kind Data :sort [[:date :desc]] :limit 1))))
 
 (defn add-data!
   "Add stock data to the DS. Lists are serialized into strings."
