@@ -6,24 +6,26 @@
             [snorri-model.view :as view])
   (:import com.google.appengine.api.memcache.Expiration))
 
-(def index-cache-key "page-index")
-(def cache-expiration (Expiration/byDeltaSeconds 600))
-
-(defn index-data
-  "Get the index data from cache if possible."
-  []
-  (if-let [cached-data (memcache/get index-cache-key)]
+(defn get-cached-data
+  "Get the data from cache if possible, otherwise calls content-fn and store."
+  [cache-key content-fn cache-expiration]
+  (if-let [cached-data (memcache/get cache-key)]
     cached-data
-    (let [last-date (store/get-last-date)
-          data (store/get-data last-date)
-          enriched-data (map process/enrich-data data)
-          rendered-content (view/index last-date enriched-data)]
-      (memcache/put! index-cache-key rendered-content :expiration cache-expiration)
-      rendered-content)))
+    (let [content (content-fn)]
+      (memcache/put! cache-key content
+                     :expiration (Expiration/byDeltaSeconds cache-expiration))
+      content)))
+
+(defn render-index-data
+  "Renders the index data block."
+  []
+  (let [last-date (store/get-last-date)
+        data (store/get-data last-date)
+        enriched-data (map process/enrich-data data)]
+    (view/index last-date enriched-data)))
 
 (defn index
   "Index page."
   []
   (view/layout
-    (index-data)))
-
+    (get-cached-data "page-index" render-index-data 600)))
