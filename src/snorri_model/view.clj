@@ -29,7 +29,7 @@
   (link-to (scrape/get-scrape-url (h symbol)) (h symbol)))
 
 (defn index
-  "Render home page body."
+  "Render home page body. Potentially cached."
   [last-date data]
   (html
     [:div#data

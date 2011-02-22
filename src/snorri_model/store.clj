@@ -17,7 +17,8 @@
   "Return all symbols from the DS."
   []
   (ds/query :kind Symbol
-            :sort [:symbol]))
+            :sort [:symbol]
+            :chunk-size 200))
 
 (defn get-scrape-symbols
   "Return all symbols that are not yet scraped on the given date."
@@ -70,7 +71,8 @@
   [date]
   (map unfold-data (ds/query :kind Data
                              :filter (= :date date)
-                             :sort [:symbol])))
+                             :sort [:symbol]
+                             :chunk-size 200)))
 
 ;; XXX Performance issue?
 (defn get-last-date
