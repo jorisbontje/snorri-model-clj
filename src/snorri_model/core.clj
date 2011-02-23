@@ -5,7 +5,8 @@
             [snorri-model.admin :as admin]
             [snorri-model.api :as api]
             [snorri-model.middleware :as mw]
-            [snorri-model.public :as public])
+            [snorri-model.public :as public]
+            [snorri-model.view :as view])
   (:use compojure.core
         ring.middleware.reload
         ring.middleware.params

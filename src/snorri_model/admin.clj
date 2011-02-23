@@ -7,7 +7,7 @@
 (defn index
   "Symbols index page."
   []
-  (view/layout
+  (view/layout (view/symbols-script)
     (view/symbols (store/get-symbols))))
 
 (defn add-symbol

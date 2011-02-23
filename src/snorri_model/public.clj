@@ -27,5 +27,5 @@
 (defn index
   "Index page."
   []
-  (view/layout
+  (view/layout (view/index-script)
     (get-cached-data "page-index" render-index-data 600)))
