@@ -6,8 +6,8 @@
             [snorri-model.store :as store]
             [snorri-model.util :as util]))
 
-(defn return-200 [message]
-  {:status 200
+(defn return-status [code message]
+  {:status code
    :headers {"Content-Type" "text/plain"}
    :body (str message "\r\n")})
 
@@ -19,10 +19,10 @@
     (println "Queueing symbols")
     (doseq [{symbol :symbol} (store/get-scrape-symbols today)]
       (tq/add! :url "/tasks/fetch" :queue "fetchqueue" :params {:symbol symbol}))
-    (return-200 "OK")))
+    (return-status 200 "OK")))
 
 (defn fetch-symbol
-  "Fetch and process the given symbol. Always returns success, to prevent
+  "Fetch and process the given symbol. For unknown errors returns success, to prevent
   endless requeueing in case of scrape/parse errors."
   [symbol]
   (do (println "Fetching symbol" symbol)
@@ -30,7 +30,10 @@
       (do
         (try
           (harvest/harvest symbol)
+          (return-status 200 "OK")
+          (catch java.io.IOException e
+            (util/log "IOException:\n %s" (strp/pst-str e))
+            (return-status 504 "IOERROR"))
           (catch Exception e
-            (util/log "Exception:\n %s" (strp/pst-str e))))
-        (return-200 "OK"))
-      (return-200 "UNKNOWN SYMBOL"))))
+            (util/log "Exception:\n %s" (strp/pst-str e)))))
+      (return-status 200 "UNKNOWN SYMBOL"))))
